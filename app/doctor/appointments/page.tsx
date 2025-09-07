@@ -27,7 +27,7 @@ export default function DoctorAppointments() {
 
       if (filter === "upcoming") query = query.gte("start_ts", now)
       if (filter === "past") query = query.lt("start_ts", now)
-
+console.log("hello");
       const { data: appts, error } = await query
       if (error) console.error(error)
       if (mounted) { setRows(appts || []); setLoading(false) }
