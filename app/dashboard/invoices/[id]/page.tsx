@@ -14,7 +14,7 @@ export default function InvoiceView({ params }:{ params:{ id:string }}) {
     setInv(i)
     const { data: it } = await supabase.from("invoice_items").select("description,qty,price_cents,line_total_cents").eq("invoice_id", params.id)
     setItems(it||[])
-  })()},[params.id])
+  })()},[params.id ])
 
   async function markPaid(){
     await supabase.from("invoices").update({ payment_status: 'Paid' }).eq("id", params.id)

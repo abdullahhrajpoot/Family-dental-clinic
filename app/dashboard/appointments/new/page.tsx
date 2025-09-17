@@ -23,7 +23,7 @@ export default function NewAppointment() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  // Load doctors & services on mount
+  
   useEffect(() => {
     (async () => {
       const { data: d } = await supabase.from("practitioners").select("id,name").order("name")
@@ -32,7 +32,7 @@ export default function NewAppointment() {
     })()
   }, [])
 
-  // Search patients (by name / phone / CNIC)
+  
   async function searchPatients() {
     const q = sel.query.trim()
     if (!q) { setPatients([]); return }
@@ -45,13 +45,13 @@ export default function NewAppointment() {
   }
   useEffect(() => { searchPatients() }, [sel.query])
 
-  // Load available slots
+  
   async function loadSlots() {
     if (!sel.doctorId || !sel.serviceId || !sel.date) return
     setLoading(true)
 
     const svc = services.find(s => s.id === sel.serviceId)!
-    const weekday = dayjs(sel.date).day() // 0..6
+    const weekday = dayjs(sel.date).day() // 
 
     const { data: base } = await supabase.from("availability_slots")
       .select("start_time,end_time").eq("practitioner_id", sel.doctorId).eq("weekday", weekday)
@@ -89,7 +89,7 @@ export default function NewAppointment() {
 
         out.push({ time: slotStart.format("HH:mm"), booked: isBlocked || overlap })
 
-        // ✅ move forward without mutating the same object
+        
         t = slotStart.add(svc.duration_minutes, "minute")
       }
     })
@@ -99,7 +99,7 @@ export default function NewAppointment() {
   }
   useEffect(() => { loadSlots() }, [sel.doctorId, sel.serviceId, sel.date, services])
 
-  // Book appointment
+ 
   async function book(slotTime: string) {
     if (!sel.patientId) { alert("Select patient"); return }
     if (!sel.doctorId || !sel.serviceId) { alert("Select doctor and service"); return }
@@ -158,7 +158,7 @@ export default function NewAppointment() {
         )}
       </div>
 
-      {/* Doctor, service, date */}
+     
       <div className="grid grid-cols-3 gap-3">
         <select className="border p-2 rounded" value={sel.doctorId} onChange={e => setSel(s => ({ ...s, doctorId: e.target.value }))}>
           <option value="">Select Doctor</option>
