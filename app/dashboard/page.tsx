@@ -355,47 +355,90 @@ export default function DashboardPage() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header with toggle */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">
-          {mode === "today" ? "Today’s Schedule" : "Appointment History"}
-        </h1>
-        <div className="flex space-x-2">
-          <Button onClick={() => setMode("today")} className={mode === "today" ? "bg-green-600 text-white" : "bg-gray-200"}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      >
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            {mode === "today" ? "Today's Schedule" : "Appointment History"}
+          </h1>
+          <p className="text-gray-600 mt-1">
+            {mode === "today" 
+              ? "View and manage today's appointments" 
+              : "Browse through appointment history and generate reports"
+            }
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => setMode("today")} 
+            variant={mode === "today" ? "default" : "outline"}
+            className={mode === "today" ? "medical-button" : "border-blue-200 text-blue-600 hover:bg-blue-50"}
+          >
             Today
           </Button>
-          <Button onClick={() => setMode("history")} className={mode === "history" ? "bg-green-600 text-white" : "bg-gray-200"}>
+          <Button 
+            onClick={() => setMode("history")} 
+            variant={mode === "history" ? "default" : "outline"}
+            className={mode === "history" ? "medical-button" : "border-blue-200 text-blue-600 hover:bg-blue-50"}
+          >
             History
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Filters for history mode */}
       {mode === "history" && (
-        <div className="flex items-center space-x-2 mb-4">
-          <input
-            type="date"
-            value={date}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
-            className="border rounded p-2"
-          />
-          <Input
-            type="text"
-            placeholder="Filter by patient or doctor"
-            value={filter}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
-            className="flex-1"
-          />
-          <Button onClick={exportCSV} className="bg-blue-600 text-white">
-            Export CSV
-          </Button>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="medical-card p-4"
+        >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">Date</label>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
+                  className="medical-input p-2"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-sm font-medium text-gray-700 mb-1 block">Search</label>
+                <Input
+                  type="text"
+                  placeholder="Filter by patient or doctor"
+                  value={filter}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
+                  className="medical-input"
+                />
+              </div>
+            </div>
+            <div className="flex items-end">
+              <Button onClick={exportCSV} className="medical-button">
+                Export CSV
+              </Button>
+            </div>
+          </div>
+        </motion.div>
       )}
 
       {/* Data table */}
-      <Card className="border rounded">
-        <div className="grid grid-cols-5 font-medium bg-gray-50 p-2">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="medical-card overflow-hidden"
+      >
+        <div className="medical-table-header grid grid-cols-5 p-4 font-semibold text-gray-700">
           <div>Time</div>
           <div>Patient</div>
           <div>Doctor</div>
@@ -404,29 +447,47 @@ export default function DashboardPage() {
         </div>
 
         {loading ? (
-          <div className="p-4 text-sm text-gray-500">Loading…</div>
+          <div className="p-8 text-center text-gray-500">
+            <div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+            <div>Loading appointments...</div>
+          </div>
         ) : rows.length > 0 ? (
-          rows.map((r) => (
-            <motion.div
-              key={r.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="grid grid-cols-5 p-2 border-t"
-            >
-              <div>
-                {dayjs(r.start_ts).format("hh:mm A")}–{dayjs(r.end_ts).format("hh:mm A")}
-              </div>
-              <div>{r.patients?.name ?? "-"}</div>
-              <div>{r.practitioners?.name ?? "-"}</div>
-              <div>{r.services?.title ?? "-"}</div>
-              <div>{r.status ?? "-"}</div>
-            </motion.div>
-          ))
+          <div className="divide-y divide-blue-100">
+            {rows.map((r, index) => (
+              <motion.div
+                key={r.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, delay: index * 0.05 }}
+                className="medical-table-row grid grid-cols-5 p-4 hover:bg-blue-50/50 transition-colors"
+              >
+                <div className="font-medium text-blue-600">
+                  {dayjs(r.start_ts).format("hh:mm A")}–{dayjs(r.end_ts).format("hh:mm A")}
+                </div>
+                <div className="font-medium text-gray-900">{r.patients?.name ?? "-"}</div>
+                <div className="text-gray-700">{r.practitioners?.name ?? "-"}</div>
+                <div className="text-gray-700">{r.services?.title ?? "-"}</div>
+                <div>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    r.status === 'completed' ? 'bg-green-100 text-green-800' :
+                    r.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                    r.status === 'booked' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {r.status ?? "-"}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         ) : (
-          <div className="p-4 text-sm text-gray-500">No appointments found.</div>
+          <div className="p-8 text-center text-gray-500">
+            <div className="text-4xl mb-2">📅</div>
+            <div className="font-medium">No appointments found</div>
+            <div className="text-sm">Try adjusting your filters or check back later</div>
+          </div>
         )}
-      </Card>
+      </motion.div>
     </div>
   )
 }

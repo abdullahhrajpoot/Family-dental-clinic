@@ -177,6 +177,7 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardHeader,
@@ -184,6 +185,8 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { motion } from "framer-motion"
+import { Search, Receipt, Plus, Calendar, DollarSign } from "lucide-react"
 
 export default function InvoicesPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -226,63 +229,114 @@ export default function InvoicesPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Invoices</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* Search bar */}
-          <Input
-            type="text"
-            placeholder="Search by Name, CNIC, or Phone"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="mb-4"
-          />
+    <div className="space-y-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      >
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Invoices</h1>
+          <p className="text-gray-600 mt-1">Manage billing and payment records</p>
+        </div>
+        <Button className="medical-button" asChild>
+          <Link href="/dashboard/invoices/new">+ New Invoice</Link>
+        </Button>
+      </motion.div>
 
-          <Separator className="mb-4" />
-
-          {/* Results */}
-          {filteredInvoices.length === 0 ? (
-            <p className="text-muted-foreground">No invoices found</p>
-          ) : (
-            <div className="space-y-3">
-              {filteredInvoices.map((invoice) => (
-                <Link
-                  key={invoice.id}
-                  href={`/dashboard/invoices/${invoice.id}`}
-                >
-                  <Card className="hover:bg-accent transition">
-                    <CardContent className="p-4 flex justify-between items-center">
-                      <div>
-                        <p className="font-semibold">
-                          {invoice.patients?.name}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          CNIC: {invoice.patients?.cnic || "N/A"} | Phone:{" "}
-                          {invoice.patients?.phone || "N/A"}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">
-                          Amount: Rs {(invoice.total_cents / 100).toLocaleString()}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Date:{" "}
-                          {new Date(
-                            invoice.created_at
-                          ).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+      {/* Search */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="medical-card p-4"
+      >
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Search Invoices</label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Search by Name, CNIC, or Phone"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="medical-input pl-10"
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Invoice List */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="medical-card overflow-hidden"
+      >
+        <div className="medical-table-header p-4">
+          <h2 className="text-lg font-semibold text-gray-800">Invoice Directory</h2>
+          <p className="text-sm text-gray-600">Total: {filteredInvoices.length} invoices</p>
+        </div>
+
+        {filteredInvoices.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            <div className="text-4xl mb-2">🧾</div>
+            <div className="font-medium">No invoices found</div>
+            <div className="text-sm">Start by creating your first invoice</div>
+          </div>
+        ) : (
+          <div className="divide-y divide-blue-100">
+            {filteredInvoices.map((invoice, index) => (
+              <motion.div
+                key={invoice.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, delay: index * 0.05 }}
+              >
+                <Link href={`/dashboard/invoices/${invoice.id}`}>
+                  <div className="medical-table-row p-4 hover:bg-blue-50/50 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Receipt className="w-6 h-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {invoice.patients?.name || "Unknown Patient"}
+                          </h3>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-600">
+                            <span>CNIC: {invoice.patients?.cnic || "N/A"}</span>
+                            <span className="hidden sm:inline">•</span>
+                            <span>Phone: {invoice.patients?.phone || "N/A"}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col sm:items-end gap-2">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-green-600" />
+                          <span className="font-bold text-green-600 text-lg">
+                            Rs {(invoice.total_cents / 100).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="w-4 h-4" />
+                          <span>
+                            {new Date(invoice.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </motion.div>
     </div>
   )
 }

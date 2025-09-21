@@ -45,37 +45,37 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(0.99 0.01 240);
+  --foreground: oklch(0.15 0.02 240);
+  --card: oklch(1 0.01 240);
+  --card-foreground: oklch(0.15 0.02 240);
+  --popover: oklch(1 0.01 240);
+  --popover-foreground: oklch(0.15 0.02 240);
+  --primary: oklch(0.55 0.15 240);
+  --primary-foreground: oklch(0.98 0.01 240);
+  --secondary: oklch(0.95 0.02 240);
+  --secondary-foreground: oklch(0.15 0.02 240);
+  --muted: oklch(0.96 0.01 240);
+  --muted-foreground: oklch(0.5 0.05 240);
+  --accent: oklch(0.92 0.03 240);
+  --accent-foreground: oklch(0.15 0.02 240);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: oklch(0.9 0.02 240);
+  --input: oklch(0.9 0.02 240);
+  --ring: oklch(0.55 0.15 240);
+  --chart-1: oklch(0.6 0.15 240);
+  --chart-2: oklch(0.65 0.12 200);
+  --chart-3: oklch(0.7 0.1 180);
+  --chart-4: oklch(0.75 0.08 160);
+  --chart-5: oklch(0.8 0.06 140);
+  --sidebar: oklch(0.98 0.01 240);
+  --sidebar-foreground: oklch(0.15 0.02 240);
+  --sidebar-primary: oklch(0.55 0.15 240);
+  --sidebar-primary-foreground: oklch(0.98 0.01 240);
+  --sidebar-accent: oklch(0.95 0.02 240);
+  --sidebar-accent-foreground: oklch(0.15 0.02 240);
+  --sidebar-border: oklch(0.9 0.02 240);
+  --sidebar-ring: oklch(0.55 0.15 240);
 }
 
 .dark {
@@ -119,4 +119,132 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Medical Theme Custom Styles */
+.medical-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.medical-gradient-light {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%);
+}
+
+.medical-card {
+  @apply bg-white/90 backdrop-blur-sm border border-blue-100 shadow-lg shadow-blue-500/10 rounded-xl;
+}
+
+.medical-nav {
+  @apply bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg;
+}
+
+.medical-button {
+  @apply bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg;
+}
+
+.medical-input {
+  @apply border-blue-200 focus:border-blue-400 focus:ring-blue-400/20 rounded-lg;
+}
+
+.medical-table {
+  @apply bg-white/90 backdrop-blur-sm border border-blue-100 shadow-sm rounded-lg overflow-hidden;
+}
+
+.medical-table-header {
+  @apply bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200;
+}
+
+.medical-table-row {
+  @apply hover:bg-blue-50/50 transition-colors duration-200;
+}
+
+.medical-sidebar {
+  @apply bg-gradient-to-b from-blue-50 to-blue-100 border-r border-blue-200;
+}
+
+.medical-sidebar-item {
+  @apply hover:bg-blue-200/50 transition-all duration-200 rounded-lg mx-2 px-3 py-2;
+}
+
+.medical-sidebar-item.active {
+  @apply bg-blue-500 text-white shadow-md;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .mobile-padding {
+    @apply px-4 py-2;
+  }
+  
+  .mobile-text {
+    @apply text-sm;
+  }
+  
+  .mobile-grid {
+    @apply grid-cols-1 gap-2;
+  }
+  
+  .mobile-table {
+    @apply text-xs;
+  }
+  
+  .mobile-button {
+    @apply px-3 py-2 text-sm;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-padding {
+    @apply px-6 py-3;
+  }
+  
+  .tablet-grid {
+    @apply grid-cols-2 gap-4;
+  }
+  
+  .tablet-table {
+    @apply text-sm;
+  }
+}
+
+@media (min-width: 1025px) {
+  .desktop-padding {
+    @apply px-8 py-4;
+  }
+  
+  .desktop-grid {
+    @apply grid-cols-3 gap-6;
+  }
+  
+  .desktop-table {
+    @apply text-base;
+  }
+}
+
+/* Animation utilities */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

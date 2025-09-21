@@ -107,67 +107,111 @@ export default function PatientsPage() {
   }, [])
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-4"
-    >
-      <h1 className="text-xl font-semibold">Patients</h1>
-
-      <div className="flex gap-2">
-        <Input
-          value={q}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value)}
-          placeholder="Search name / phone / CNIC"
-          className="w-full"
-        />
-        <Button onClick={search}>Search</Button>
-        <Button variant="outline" asChild>
-          <a href="/dashboard/patients/new">+ Add New</a>
+    <div className="space-y-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      >
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Patients</h1>
+          <p className="text-gray-600 mt-1">Manage patient records and information</p>
+        </div>
+        <Button className="medical-button" asChild>
+          <Link href="/dashboard/patients/new">+ Add New Patient</Link>
         </Button>
-      </div>
+      </motion.div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Patient List</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="space-y-2">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          ) : rows.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>CNIC</TableHead>
-                  <TableHead>File #</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((p) => (
-                  <TableRow key={p.id} >
-                   
-                    <Link href={`/dashboard/patients/${p.id}`}>
-                      <TableCell>{p.name}</TableCell>
-                      <TableCell>{p.phone ?? "-"}</TableCell>
-                      <TableCell>{p.cnic ?? "-"}</TableCell>
-                      <TableCell>{p.file_number ?? "-"}</TableCell>
-                    </Link>
-                  </TableRow>
+      {/* Search */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="medical-card p-4"
+      >
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Search Patients</label>
+            <Input
+              value={q}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value)}
+              placeholder="Search by name, phone, or CNIC"
+              className="medical-input"
+            />
+          </div>
+          <div className="flex items-end">
+            <Button onClick={search} className="medical-button">
+              Search
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Patient List */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="medical-card overflow-hidden"
+      >
+        <div className="medical-table-header p-4">
+          <h2 className="text-lg font-semibold text-gray-800">Patient Directory</h2>
+          <p className="text-sm text-gray-600">Total: {rows.length} patients</p>
+        </div>
+
+        {loading ? (
+          <div className="p-8 text-center">
+            <div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+            <div className="text-gray-500">Loading patients...</div>
+          </div>
+        ) : rows.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="medical-table-header">
+                <tr>
+                  <th className="text-left p-4 font-semibold text-gray-700">Name</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">Phone</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">CNIC</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">File #</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-blue-100">
+                {rows.map((p, index) => (
+                  <motion.tr
+                    key={p.id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15, delay: index * 0.05 }}
+                    className="medical-table-row hover:bg-blue-50/50 transition-colors"
+                  >
+                      <td className="p-4">
+                        <Link href={`/dashboard/patients/${p.id}`} className="flex items-center gap-3 hover:text-blue-600 transition-colors">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="text-blue-600 font-semibold text-sm">
+                              {p.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <span className="font-medium text-gray-900">{p.name}</span>
+                        </Link>
+                      </td>
+                      <td className="p-4 text-gray-700">{p.phone ?? "-"}</td>
+                      <td className="p-4 text-gray-700">{p.cnic ?? "-"}</td>
+                      <td className="p-4 text-gray-700">{p.file_number ?? "-"}</td>
+                  </motion.tr>
                 ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <p className="text-sm text-gray-500">No patients yet.</p>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-8 text-center text-gray-500">
+            <div className="text-4xl mb-2">👥</div>
+            <div className="font-medium">No patients found</div>
+            <div className="text-sm">Start by adding your first patient</div>
+          </div>
+        )}
+      </motion.div>
+    </div>
   )
 }

@@ -96,8 +96,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { motion } from "framer-motion"
 
 export default function DoctorPatientProfile() {
-  const params = useParams() as { id: string }
-  const id = params.id
+  const params = useParams()
+  const id = params.id as string
   const [p, setP] = useState<any>(null)
   const [appts, setAppts] = useState<any[]>([])
   const [invoices, setInvoices] = useState<any[]>([])

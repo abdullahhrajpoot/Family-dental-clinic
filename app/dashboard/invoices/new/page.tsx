@@ -166,6 +166,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
+import Link from "next/link"
 
 type Patient = { id: string; name: string; phone: string | null }
 type Doctor = { id: string; name: string }
@@ -309,7 +310,7 @@ export default function NewInvoice() {
                 Search
               </Button>
               <Button asChild variant="secondary">
-                <a href="/dashboard/patients/new">+ New Patient</a>
+                <Link href="/dashboard/patients/new">+ New Patient</Link>
               </Button>
             </div>
             {patients.length > 0 && (

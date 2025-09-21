@@ -214,8 +214,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { Loader2, Search, UserPlus, Calendar as CalendarIcon } from "lucide-react"
+import { Loader2, Search, UserPlus, Calendar as CalendarIcon, Clock } from "lucide-react"
 import { toast } from "sonner"
+import Link from "next/link"
 
 type Doc = { id: string; name: string }
 type Service = { id: string; title: string; duration_minutes: number }
@@ -368,30 +369,58 @@ export default function NewAppointment() {
   }
 
   return (
-    <motion.div
-      className="space-y-6 max-w-3xl mx-auto p-6"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      <h1 className="text-2xl font-bold tracking-tight">📅 New Appointment</h1>
+    <div className="max-w-6xl mx-auto space-y-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      >
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">📅 Book New Appointment</h1>
+          <p className="text-gray-600 mt-1">Schedule a new appointment for a patient</p>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="space-y-6"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
 
       {/* Patient Search */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Select Patient</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex gap-2">
-            <Input
-              placeholder="Search name, phone, or CNIC"
-              value={sel.query}
-              onChange={(e) => setSel((s) => ({ ...s, query: e.target.value }))}
-            />
-            <Button variant="outline" asChild>
-              <a href="/dashboard/patients/new">
-                <UserPlus className="w-4 h-4 mr-1" /> New
-              </a>
-            </Button>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="medical-card p-6"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <Search className="w-5 h-5 text-blue-600" />
+          </div>
+          <h2 className="text-lg font-semibold text-gray-800">Select Patient</h2>
+        </div>
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 block">Search Patients</label>
+              <Input
+                placeholder="Search name, phone, or CNIC"
+                value={sel.query}
+                onChange={(e) => setSel((s) => ({ ...s, query: e.target.value }))}
+                className="medical-input"
+              />
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" asChild className="border-blue-200 text-blue-600 hover:bg-blue-50">
+                <Link href="/dashboard/patients/new">
+                  <UserPlus className="w-4 h-4 mr-1" /> New Patient
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <AnimatePresence>
@@ -422,101 +451,138 @@ export default function NewAppointment() {
               </motion.div>
             )}
           </AnimatePresence>
-        </CardContent>
-      </Card>
+        </div>
+      </motion.div>
 
       {/* Doctor, Service, Date */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Details</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Select
-            onValueChange={(val) => setSel((s) => ({ ...s, doctorId: val }))}
-            value={sel.doctorId}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Doctor" />
-            </SelectTrigger>
-            <SelectContent>
-              {doctors.map((d) => (
-                <SelectItem key={d.id} value={d.id}>
-                  {d.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            onValueChange={(val) => setSel((s) => ({ ...s, serviceId: val }))}
-            value={sel.serviceId}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Service" />
-            </SelectTrigger>
-            <SelectContent>
-              {services.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <div className="flex items-center border rounded px-3">
-            <CalendarIcon className="w-4 h-4 mr-2 text-muted-foreground" />
-            <Input
-              type="date"
-              className="border-0 p-0 focus-visible:ring-0"
-              value={sel.date}
-              onChange={(e) => setSel((s) => ({ ...s, date: e.target.value }))}
-            />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="medical-card p-6"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-green-100 rounded-lg">
+            <CalendarIcon className="w-5 h-5 text-green-600" />
           </div>
-        </CardContent>
-      </Card>
+          <h2 className="text-lg font-semibold text-gray-800">Appointment Details</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Doctor</label>
+            <Select
+              onValueChange={(val) => setSel((s) => ({ ...s, doctorId: val }))}
+              value={sel.doctorId}
+            >
+              <SelectTrigger className="medical-input">
+                <SelectValue placeholder="Select Doctor" />
+              </SelectTrigger>
+              <SelectContent>
+                {doctors.map((d) => (
+                  <SelectItem key={d.id} value={d.id}>
+                    {d.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Service</label>
+            <Select
+              onValueChange={(val) => setSel((s) => ({ ...s, serviceId: val }))}
+              value={sel.serviceId}
+            >
+              <SelectTrigger className="medical-input">
+                <SelectValue placeholder="Select Service" />
+              </SelectTrigger>
+              <SelectContent>
+                {services.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-1 block">Date</label>
+            <div className="relative">
+              <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                type="date"
+                className="medical-input pl-10"
+                value={sel.date}
+                onChange={(e) => setSel((s) => ({ ...s, date: e.target.value }))}
+              />
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Slots */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Available Slots</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-3 mb-3 text-sm">
-            <span className="w-3 h-3 bg-green-500 rounded-sm"></span> Available
-            <span className="w-3 h-3 bg-gray-400 rounded-sm ml-4"></span> Booked/Blocked
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="medical-card p-6"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-purple-100 rounded-lg">
+            <Clock className="w-5 h-5 text-purple-600" />
           </div>
+          <h2 className="text-lg font-semibold text-gray-800">Available Time Slots</h2>
+        </div>
 
-          {loading ? (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Loader2 className="animate-spin w-4 h-4" /> Loading slots…
+        <div className="flex items-center gap-6 mb-4 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+            <span className="text-gray-600">Available</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+            <span className="text-gray-600">Booked/Blocked</span>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="flex items-center gap-3 text-gray-500">
+              <Loader2 className="animate-spin w-5 h-5" />
+              <span>Loading available slots...</span>
             </div>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {slots.map((s) => (
-                <motion.button
-                  key={s.time}
-                  disabled={s.booked || !sel.patientId || !sel.doctorId || !sel.serviceId}
-                  onClick={() => book(s.time)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-4 py-2 rounded-md border text-sm font-medium transition-colors ${
-                    s.booked || !sel.patientId || !sel.doctorId || !sel.serviceId
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                      : "bg-green-50 hover:bg-green-100 border-green-600"
-                  }`}
-                >
-                  {s.time}
-                </motion.button>
-              ))}
-              {slots.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Select doctor, service & date to view slots.
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {slots.map((s) => (
+              <motion.button
+                key={s.time}
+                disabled={s.booked || !sel.patientId || !sel.doctorId || !sel.serviceId}
+                onClick={() => book(s.time)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all duration-200 ${
+                  s.booked || !sel.patientId || !sel.doctorId || !sel.serviceId
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                    : "bg-green-50 hover:bg-green-100 border-green-300 text-green-700 hover:border-green-400 hover:shadow-md"
+                }`}
+              >
+                {s.time}
+              </motion.button>
+            ))}
+            {slots.length === 0 && (
+              <div className="col-span-full text-center py-8 text-gray-500">
+                <Clock className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                <p className="text-sm">
+                  Select doctor, service & date to view available slots.
                 </p>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
+              </div>
+            )}
+          </div>
+        )}
+      </motion.div>
+      </motion.div>
+    </div>
   )
 }

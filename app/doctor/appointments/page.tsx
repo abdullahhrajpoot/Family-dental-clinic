@@ -78,6 +78,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Clock, Calendar, User, Stethoscope } from "lucide-react"
 
 export default function DoctorAppointments() {
   const [rows, setRows] = useState<any[]>([])
@@ -128,79 +129,141 @@ export default function DoctorAppointments() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card>
-        <CardHeader>
-          <CardTitle>Appointments</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* Filter buttons */}
-          <div className="flex gap-2 mb-4">
-            <Button
-              variant={filter === "upcoming" ? "default" : "outline"}
-              onClick={() => setFilter("upcoming")}
-            >
-              Upcoming
-            </Button>
-            <Button
-              variant={filter === "past" ? "default" : "outline"}
-              onClick={() => setFilter("past")}
-            >
-              Past
-            </Button>
-            <Button
-              variant={filter === "all" ? "default" : "outline"}
-              onClick={() => setFilter("all")}
-            >
-              All
-            </Button>
-          </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      >
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">My Appointments</h1>
+          <p className="text-gray-600 mt-1">View and manage your scheduled appointments</p>
+        </div>
+      </motion.div>
 
-          {/* Appointments table */}
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Time</TableHead>
-                <TableHead>Patient</TableHead>
-                <TableHead>Service</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map(r => (
-                <motion.tr
-                  key={r.id}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="border-b"
-                >
-                  <TableCell>{dayjs(r.start_ts).format("YYYY-MM-DD")}</TableCell>
-                  <TableCell>{dayjs(r.start_ts).format("HH:mm")}</TableCell>
-                  <TableCell>{r.patients?.name}</TableCell>
-                  <TableCell>{r.services?.title}</TableCell>
-                  <TableCell className="capitalize">{r.status}</TableCell>
-                </motion.tr>
-              ))}
-              {rows.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="text-center text-muted-foreground py-6"
+      {/* Filter Buttons */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="medical-card p-4"
+      >
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={filter === "upcoming" ? "default" : "outline"}
+            onClick={() => setFilter("upcoming")}
+            className={filter === "upcoming" ? "medical-button" : "border-blue-200 text-blue-600 hover:bg-blue-50"}
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            Upcoming
+          </Button>
+          <Button
+            variant={filter === "past" ? "default" : "outline"}
+            onClick={() => setFilter("past")}
+            className={filter === "past" ? "medical-button" : "border-blue-200 text-blue-600 hover:bg-blue-50"}
+          >
+            <Calendar className="w-4 h-4 mr-2" />
+            Past
+          </Button>
+          <Button
+            variant={filter === "all" ? "default" : "outline"}
+            onClick={() => setFilter("all")}
+            className={filter === "all" ? "medical-button" : "border-blue-200 text-blue-600 hover:bg-blue-50"}
+          >
+            <Stethoscope className="w-4 h-4 mr-2" />
+            All
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Appointments Table */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="medical-card overflow-hidden"
+      >
+        <div className="medical-table-header p-4">
+          <h2 className="text-lg font-semibold text-gray-800">Appointment Schedule</h2>
+          <p className="text-sm text-gray-600">Total: {rows.length} appointments</p>
+        </div>
+
+        {loading ? (
+          <div className="p-8 text-center">
+            <div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+            <div className="text-gray-500">Loading appointments...</div>
+          </div>
+        ) : rows.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="medical-table-header">
+                <tr>
+                  <th className="text-left p-4 font-semibold text-gray-700">Date</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">Time</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">Patient</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">Service</th>
+                  <th className="text-left p-4 font-semibold text-gray-700">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-blue-100">
+                {rows.map((r, index) => (
+                  <motion.tr
+                    key={r.id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15, delay: index * 0.05 }}
+                    className="medical-table-row hover:bg-blue-50/50 transition-colors"
                   >
-                    No appointments.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </motion.div>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium text-gray-900">
+                          {dayjs(r.start_ts).format("YYYY-MM-DD")}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium text-blue-600">
+                          {dayjs(r.start_ts).format("HH:mm")}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-green-600" />
+                        </div>
+                        <span className="font-medium text-gray-900">{r.patients?.name || "Unknown"}</span>
+                      </div>
+                    </td>
+                    <td className="p-4 text-gray-700">{r.services?.title || "-"}</td>
+                    <td className="p-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+                        r.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        r.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                        r.status === 'booked' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {r.status || "-"}
+                      </span>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-8 text-center text-gray-500">
+            <div className="text-4xl mb-2">📅</div>
+            <div className="font-medium">No appointments found</div>
+            <div className="text-sm">Your appointment schedule is clear</div>
+          </div>
+        )}
+      </motion.div>
+    </div>
   )
 }
