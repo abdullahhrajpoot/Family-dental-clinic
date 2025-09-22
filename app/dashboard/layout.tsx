@@ -113,7 +113,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <nav className="space-y-2">
                 {navItems.map((item, index) => {
                   const isActive = pathname === item.href || 
-                    (item.href !== "/dashboard" && pathname.startsWith(item.href))
+                    (item.href !== "/dashboard" && pathname.startsWith(item.href) && 
+                     !(item.href === "/dashboard/invoices" && pathname.startsWith("/dashboard/invoices/new")))
                   
                   return (
                     <motion.div
